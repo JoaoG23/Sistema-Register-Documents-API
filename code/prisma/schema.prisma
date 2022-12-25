@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// npx prisma
+// npx prisma init
+// npx prisma migrate dev --name init
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Documentos {
+  id            String @id @default(uuid())
+  nomeDocumento String @db.VarChar(30)
+  caminho String @db.VarChar
+  tipo          String @db.VarChar(10)
+  usuarioId String?
+  usuarios Usuarios? @relation(fields: [usuarioId], references: [id])
+}
+
+model Usuarios {
+  id      String  @id @default(uuid())
+  email   String? @default("") @unique
+  usuario String  @default("") @unique
+  senha   String  @db.VarChar(255)
+  documentos Documentos[]
+}
+
